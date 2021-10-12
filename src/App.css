@@ -25,9 +25,9 @@
 .hangman {
   display: flex;
 }
-.hangman span {
+/* .hangman span {
   visibility: hidden;
-}
+} */
 .hangman span.visible {
   visibility: visible;
 }

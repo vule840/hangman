@@ -1,68 +1,106 @@
 import React from "react";
-import Letter from "./Letter";
 
 const Hangman = () => {
   const [quote, setQuote] = React.useState("");
-  // const [currentLetter, setCurrentLetter] = React.useState("");
-  const [wordTocompare, addWords] = React.useState<any[]>([]);
-  const [keyLetter, setKeyLetter] = React.useState<any>();
-  // const [indexLetter, setIndexLetter] = React.useState<number>();
+  const [correctGuesses, setCorrectGuesses] = React.useState<any>([]);
+  const [wrongLetters, setWrongLetters] = React.useState<any>([]);
+  const alphabets = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    ",",
+    ".",
+    " ",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+  ];
   React.useEffect(() => {
     fetch("http://api.quotable.io/random")
       .then((response) => response.json())
       .then((response) => setQuote(response.content));
   }, []);
-
-  // console.log(quote.split(""));
-
-  const inputLetter = (e: any) => {
-    e.preventDefault();
-    const key = e.key;
-    // console.log(quote.toLowerCase().split(" "));
-    const words = quote.toLowerCase().split(" ");
-    //console.log(key);
-    if (quote.length > 0) {
-      words.map((word) => {
-        if (word.includes(key)) {
-          //console.log(word, key);
-          setKeyLetter(key);
-          addWords((prev) => [...new Set([...prev, word])]);
-          console.log(wordTocompare);
-        }
-      });
-      // if (quote.toLowerCase().split(" ").includes(key)) {
-      //   //console.log(key);
-      //   setKeyLetter(key);
-      //   setIndexLetter(
-      //     quote
-      //       .toLowerCase()
-      //       .split("")
-      //       .findIndex((x) => x === key)
-      //   );
-      // }
+  const filterChars = (character: any) => {
+    if (character === " " || character === "." || character === ",") {
+      return character;
+    } else {
+      return "_";
     }
-
-    // if (quote.split("").includes(key)) {
-    //   console.log(`key exists ${key}`);
-    // } else {
-    //   console.log(`key doestn exists ${key}`);
-    // }
   };
-  window.addEventListener("keydown", inputLetter);
+  const word = quote ? quote : "";
+  console.log(word);
+  const maskedWord = word
+    .split("")
+    .map((letter) =>
+      correctGuesses.includes(letter) ? letter : filterChars(letter)
+    )
+    .join(" ");
 
   return (
     <div>
       <h2>Hangman</h2>
-      <Letter
-        quote={quote}
-        keyLetter={keyLetter}
-        wordTocompare={wordTocompare}
-      />
-      <form action="">
-        <input max="1" />
-        <br />
-        <input type="submit" />
-      </form>
+      <p>Wrong letters: {wrongLetters}</p>
+      <p>{maskedWord}</p>
+      {alphabets.map((alphabet, index) => (
+        <button
+          key={index}
+          onClick={() => {
+            if (word.includes(alphabet)) {
+              setCorrectGuesses([...correctGuesses, alphabet]);
+            } else {
+              setWrongLetters([...new Set([...wrongLetters, alphabet])]);
+            }
+          }}
+        >
+          {alphabet}
+        </button>
+      ))}
     </div>
   );
 };

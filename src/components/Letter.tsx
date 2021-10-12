@@ -3,6 +3,7 @@ import React from "react";
 
 const Letter = (props: any) => {
   const word = props.quote.split("");
+  console.log(props.correctLetters);
   //console.log(props.wordTocompare.split(""));
   //console.log(props.keyLetter);
   // const addClass = (index: any) => {
@@ -15,13 +16,15 @@ const Letter = (props: any) => {
   // };
   return (
     <div className="hangman">
-      {/* {props.wordTocompare.split("").map((letter: any, i: any) => {
-        return (
-          <span className="letter" key={i}>
-            {props.keyLetter.includes(letter) ? letter : ""}
-          </span>
-        );
-      })} */}
+      {props.wordTocompare.map((letter: any, i: any) => {
+        // console.log(letter);
+        letter.split("").map((x: any) => console.log(x));
+        // return (
+        //   <span className="letter" key={i}>
+        //     {props.correctLetters.includes(letter) ? letter : ""}
+        //   </span>
+        // );
+      })}
       {/* {props.quote &&
         props.quote.split("").map((x: any, index: any) => (
           <div key={index} className={`${x === " " ? `empty` : ""} letter`}>

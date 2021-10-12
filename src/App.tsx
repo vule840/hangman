@@ -3,23 +3,17 @@ import React from "react";
 import "./App.css";
 import Hangman from "./components/Hangman";
 
-function App() {
-  const [name, setName] = React.useState("");
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log(name);
-  };
+import AddName from "./components/AddName";
+import { RootState } from "typesafe-actions";
+import { useSelector } from "react-redux";
 
+function App() {
+  const showName = useSelector((state: RootState) => state.sender.name);
   return (
     <div className="App">
       <header className="App-header">
-        <h5>Add name</h5>
-        <form onSubmit={handleSubmit} action="">
-          <input onChange={(e) => setName(e.target.value)} type="text" />
-          <br />
-          <input type="submit" />
-        </form>
-        <Hangman />
+        {!showName && <AddName />}
+        {showName && <Hangman />}
       </header>
     </div>
   );
