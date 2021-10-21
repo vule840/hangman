@@ -17,22 +17,26 @@ const HighScores = () => {
   return (
     <div>
       <table>
-        <tr>
-          <td>
-            <strong>Name</strong>
-          </td>
+        <thead>
+          <tr>
+            <td>
+              <strong>Name</strong>
+            </td>
 
-          <td>
-            <strong>Score </strong>
-          </td>
-        </tr>
+            <td>
+              <strong>Score </strong>
+            </td>
+          </tr>
+        </thead>
         {users &&
           users.map((user: any) => {
             return (
-              <tr key={Date.now()}>
-                <td>{user.name}</td>
-                <td>{user.finalscore}</td>
-              </tr>
+              <tbody key={Date.now()}>
+                <tr>
+                  <td>{user.name}</td>
+                  <td>{user.finalscore}</td>
+                </tr>
+              </tbody>
             );
           })}
       </table>

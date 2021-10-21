@@ -6,20 +6,19 @@ import { sendScore, showScore } from "../store/request";
 
 const Hangman = ({ duration = 120000 }) => {
   const dispatch = useDispatch();
-  const [quote, setQuote] = React.useState("");
+  const [quote, setQuote] = React.useState({ quote: "", id: null });
   const [id, setId] = React.useState<any>("");
   const [correctGuesses, setCorrectGuesses] = React.useState<any>([]);
   const [wrongLetters, setWrongLetters] = React.useState<any>([]);
-  const [timeUp, setTimeUp] = React.useState(false);
+  const [, setTimeUp] = React.useState(false);
   const [time, setTime] = React.useState<NodeJS.Timeout>();
   const theName = useSelector((state: RootState) => state.sender.name);
-
   const calculateScore = (L: number, U: number, E: number, T: any) => {
     let smarterScore = 0;
     smarterScore = ((L + U) / (E + T / 1000)) * 100;
     return smarterScore.toFixed();
   };
-
+  //, setId(response._id)
   const alphabets = [
     "a",
     "b",
@@ -49,9 +48,11 @@ const Hangman = ({ duration = 120000 }) => {
     "z",
   ];
   React.useEffect(() => {
-    fetch("http://api.quotable.io/random?maxLength=50")
+    fetch("https://api.quotable.io/random?maxLength=20")
       .then((response) => response.json())
-      .then((response) => (setQuote(response.content), setId(response._id)));
+      .then((response) =>
+        setQuote({ ...quote, quote: response.content, id: response._id })
+      );
 
     const timeout = setTimeout(() => {
       setTimeUp(true);
@@ -62,23 +63,19 @@ const Hangman = ({ duration = 120000 }) => {
   }, []);
 
   const filterChars = (character: any) => {
-    if (
-      character === "-" ||
-      character === ":" ||
-      character === "'" ||
-      character === ";" ||
-      character === "." ||
-      character === ","
-    ) {
-      return character;
-    } else if (character === " ") {
+    const regex = /\W+/g;
+    const found = character.match(regex);
+
+    if (character === " ") {
       return "---";
+    } else if (found ? found[0] : "") {
+      return character;
     } else {
       return "_";
     }
   };
 
-  const word = quote ? quote : "";
+  const word = quote ? quote.quote : "";
   const maskedWord = word
     .split("")
     .map((letter) =>
@@ -88,7 +85,7 @@ const Hangman = ({ duration = 120000 }) => {
   console.log(word);
   //RESTART
   const restart = () => {
-    fetch("http://api.quotable.io/random?maxLength=50")
+    fetch("https://api.quotable.io/random?maxLength=20")
       .then((response) => response.json())
       .then((response) => {
         setQuote(response.content);
@@ -103,31 +100,31 @@ const Hangman = ({ duration = 120000 }) => {
     dispatch(showScore());
     const score = {
       quoteId: id,
-      length: quote.length,
+      //length: quote.length,
       uniqueCharacters: correctGuesses.length / 2,
       userName: theName,
       errors: wrongLetters.length,
       duration: time,
     };
-    fetch(
-      "https://my-json-server.typicode.com/stanko-ingemark/hang_the_wise_man_frontend_task/highscores",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json, text/plain, */*",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(score),
-      }
-    )
-      .then((res) => res.json())
-      .then((res) => console.log(res));
+    // fetch(
+    //   "https://my-json-server.typicode.com/stanko-ingemark/hang_the_wise_man_frontend_task/highscores",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       Accept: "application/json, text/plain, */*",
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(score),
+    //   }
+    // )
+    //   .then((res) => res.json())
+    //   .then((res) => console.log(res));
 
     dispatch(
       sendScore(
         parseInt(
           calculateScore(
-            quote.length,
+            quote.quote.length,
             correctGuesses.length / 2,
             wrongLetters.length,
             time
