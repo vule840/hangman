@@ -3,6 +3,7 @@
 Hi :).
 When you clone project, hit 'npm install' then 'npm start'.
 If you want to test my single test hit 'npm test'.
+I used fetch instead axios, I hope you won't mind.
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
